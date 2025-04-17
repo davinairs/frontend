@@ -1,24 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Route, Routes, Navigate } from "react-router-dom";
+import Login from "./pages/login";
+import AdminDashboard from "./pages/dashboard_admin";
+import UserDashboard from "./pages/dashboard_user";
+import AnggotaDashboard from "./pages/dashboard_anggota";
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>8
+      <Route path="/" element={<Navigate to="/login" />} />
+      <Route exact path="/login" element={<Login />} />
+      <Route exact path="/dashboard_admin" element={<AdminDashboard />} />
+      <Route exact path="/dashboard_user" element={<UserDashboard />} />
+      <Route exact path="/dashboard_anggota" element={<AnggotaDashboard />} />
+    </Routes>
   );
 }
 
