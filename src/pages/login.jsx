@@ -6,14 +6,16 @@ export default class Login extends React.Component {
     this.state = {
       email: "",
       password: "",
-      error: "", // untuk pesan error
+      emailError: "",
+      passwordError: "",
     };
   }
 
   handleInputChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
-      error: "", // reset error saat mengetik
+      emailError: "",
+      passwordError: "",
     });
   };
 
@@ -21,34 +23,39 @@ export default class Login extends React.Component {
     event.preventDefault();
 
     const { email, password } = this.state;
+    let emailError = "";
+    let passwordError = "";
 
-    // Validasi input kosong
-    if (!email && !password) {
-      this.setState({ error: "Email dan password belum diisi" });
-      return;
-    } else if (!email) {
-      this.setState({ error: "Email belum diisi" });
-      return;
-    } else if (!password) {
-      this.setState({ error: "Password belum diisi" });
-      return;
-    }
-
-    // Simulasi validasi login
     const validEmail = "user@example.com";
     const validPassword = "123456";
 
-    if (email === validEmail && password === validPassword) {
-      console.log("Login berhasil!");
-      this.setState({ error: "" });
-      // Tambahkan navigasi ke halaman dashboard di sini
+    if (!email && !password) {
+      emailError = "Email belum diisi";
+      passwordError = "Password belum diisi";
+    } else if (!email) {
+      emailError = "Email belum diisi";
+    } else if (!password) {
+      passwordError = "Password belum diisi";
     } else if (email !== validEmail && password !== validPassword) {
-      this.setState({ error: "Email dan password salah." });
+      emailError = "Email belum terdaftar";
     } else if (email !== validEmail) {
-      this.setState({ error: "Email salah." });
+      emailError = "Email belum terdaftar";
     } else if (password !== validPassword) {
-      this.setState({ error: "Password salah." });
+      passwordError = "Password salah";
     }
+
+    if (emailError || passwordError) {
+      this.setState({ emailError, passwordError });
+      return;
+    }
+
+    console.log("Login berhasil!");
+    this.setState({
+      emailError: "",
+      passwordError: "",
+    });
+
+    // Tambahkan navigasi ke dashboard jika perlu
   };
 
   render() {
@@ -62,17 +69,10 @@ export default class Login extends React.Component {
             Enter your credentials to access your account
           </div>
 
-          {/* Tampilkan pesan error jika ada */}
-          {this.state.error && (
-            <div className="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded text-sm">
-              {this.state.error}
-            </div>
-          )}
-
           <div className="mt-6">
             <form onSubmit={this.handleSubmit}>
               {/* Email Input */}
-              <div className="flex flex-col mb-5">
+              <div className="flex flex-col mb-3">
                 <label htmlFor="email" className="mb-1 text-xs text-gray-600">
                   E-Mail Address:
                 </label>
@@ -84,16 +84,25 @@ export default class Login extends React.Component {
                     id="email"
                     type="email"
                     name="email"
-                    className="pl-10 pr-4 py-2 border rounded-2xl w-full text-sm placeholder-gray-500 border-gray-400 focus:outline-none focus:border-red-400"
+                    className={`pl-10 pr-4 py-2 border rounded-2xl w-full text-sm placeholder-gray-500 focus:outline-none ${
+                      this.state.emailError
+                        ? "border-red-400"
+                        : "border-gray-400"
+                    }`}
                     placeholder="Enter your email"
                     value={this.state.email}
                     onChange={this.handleInputChange}
                   />
                 </div>
+                {this.state.emailError && (
+                  <span className="text-sm text-red-500 mt-1 ml-2">
+                    {this.state.emailError}
+                  </span>
+                )}
               </div>
 
               {/* Password Input */}
-              <div className="flex flex-col mb-6">
+              <div className="flex flex-col mb-4">
                 <label htmlFor="password" className="mb-1 text-xs text-gray-600">
                   Password:
                 </label>
@@ -105,12 +114,21 @@ export default class Login extends React.Component {
                     id="password"
                     type="password"
                     name="password"
-                    className="pl-10 pr-4 py-2 border rounded-2xl w-full text-sm placeholder-gray-500 border-gray-400 focus:outline-none focus:border-red-400"
+                    className={`pl-10 pr-4 py-2 border rounded-2xl w-full text-sm placeholder-gray-500 focus:outline-none ${
+                      this.state.passwordError
+                        ? "border-red-400"
+                        : "border-gray-400"
+                    }`}
                     placeholder="Enter your password"
                     value={this.state.password}
                     onChange={this.handleInputChange}
                   />
                 </div>
+                {this.state.passwordError && (
+                  <span className="text-sm text-red-500 mt-1 ml-2">
+                    {this.state.passwordError}
+                  </span>
+                )}
               </div>
 
               {/* Submit Button */}
@@ -119,7 +137,7 @@ export default class Login extends React.Component {
                   type="submit"
                   className="w-full py-2 rounded-2xl bg-red-500 hover:bg-red-600 text-white text-sm uppercase font-semibold transition"
                 >
-                  Sign In
+                  Log In
                 </button>
               </div>
             </form>
